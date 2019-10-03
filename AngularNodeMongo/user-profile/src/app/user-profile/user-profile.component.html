@@ -1,0 +1,36 @@
+ <h3 class="text-center">User profile</h3>
+ <div class="row">
+    <div class="lef-content col-4 text-center">
+        <a href=""><img src=""/></a>
+    </div>
+    <div class="right-content  col-8">
+        <table class="table">
+            <tr>
+                <td>Full name</td>
+                <td>{{user.fullname}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{user.address}}</td>
+            </tr>
+            <tr>
+                <td>Birthday</td>
+                <td>{{user.birthday.getUTCDate}}</td>
+            </tr>
+            <tr>
+                <td>Sex</td>
+                <td>{{user.sex}}</td>
+            </tr>
+            
+            <tr>
+                <td>Email</td>
+                <td>{{user.sex?'Nam':'Nu'}}</td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>{{user.phone}}</td>
+            </tr>
+        </table>
+    </div> 
+</div>
+

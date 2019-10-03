@@ -1,0 +1,33 @@
+<div class="container" >
+    <form [formGroup]="formUserRegister" (ngSubmit)="onSubMit(formUserRegister.value)">
+        <table class="table">
+            <caption>Register new User account</caption>
+            <tr>
+                <td><label for="fullname">FullName</label></td>
+                <td><input type="text" name="fullname" placeholder="{{user.fullname}}" formControlName="fullname"/></td>
+            </tr>
+            <tr>
+                <td><label for="birthday">Birthday</label></td>
+                <td><input type="date" name="birthday" placeholder="{{user.birthday}}" formControlName="birthday"/></td>
+            </tr>
+            <tr>
+                <td><label for="address">Address</label></td>
+                <td><input type="text" name="address" placeholder="{{user.address}}" formControlName="address"/></td>
+            </tr>
+            <tr>
+                <td><label for="phone">Phone number</label></td>
+                <td><input type="text" name="phone" placeholder="{{user.phone}}" formControlName="phone"/></td>
+            </tr>
+            <tr>
+                <td><label for="sex">Sex</label></td>
+                <td><input type="checkbox" name="sex" (click)="changerSex()" formControlName="sex">{{changesex?'Nam':'Nu'}} </td>
+            </tr>
+            <tr>
+                <td><label for="email">Email</label></td>
+                <td><input type="text" name="email" placeholder="{{user.email}}" formControlName="email"/></td>
+            </tr>
+        </table>
+        <p><input type="submit" value="Register" /></p>
+    </form>
+
+</div>
