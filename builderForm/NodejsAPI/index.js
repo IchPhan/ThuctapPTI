@@ -3,7 +3,8 @@ const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var url = "mongodb://localhost:27017/";
 var dbname = "formBuilder-db";
-var collec1 = "form";
+var collec = "form";
+var collec1 = "field";
 var collec2 = "value";
 var app = Express();
 app.use(BodyParser.json());
@@ -20,7 +21,7 @@ var value = new Schema({
     label: String,
     value: String
 });
-var form = new Schema({
+var field = new Schema({
     type: String,
     lable: String,
     subtype: String,
@@ -29,80 +30,153 @@ var form = new Schema({
     style: String,
     values: [value]
 });
-
+var form= new Schema({
+    fields: [field]
+});
 var valueModel = mongoose.model(collec2, value, "values");
-var formModel = mongoose.model(collec1, form, "forms");
-var listValues = [];
+var fieldModel = mongoose.model(collec1, field, "fields");
+var formModel = mongoose.model(collec, form, "forms");
+
 app.post("/api/form/create", async (req, res) => {
     var data = req.body.data;
     var components = JSON.parse(data);
-    components.forEach(function (component) {
-        try {
-            var listValue = component.values;
-            listValue.forEach(
-                function (value) {
-                    var formValue = new valueModel({
-                        label: value.label,
-                        value: value.value
+    var fn2 = function asyncMultiplyBy2(v2) {
+        return new Promise(resolve => {
+            var formValue = new valueModel({
+                label: v2.label,
+                value: v2.value
+            });
+            formValue.save((err, values) => {
+                if (err) throw err;
+                resolve(values);
+            });
+        });
+    };
+    var fn1 = function asyncMultiplyBy1(v) {
+        return new Promise(resolve => {
+            var v2 = v.values;
+            var items = null;
+            try {
+                items = v2.map(fn2)
+            } catch (error) {
+                items = null;
+            }
+            if (items != null) {
+                var v3 = Promise.all(items);
+                v3.then(data => {
+                    var myfield = new fieldModel({
+                        type: v.type,
+                        lable: v.lable,
+                        subtype: v.subtype,
+                        className: v.className,
+                        name: v.name,
+                        style: v.style,
+                        values: data
                     });
-                    formValue.save((err, values) => {
+                    myfield.save((err, fields) => {
                         if (err) throw err;
-                        console.log(values);
-                        listValues.push(values._id); 
-                        console.log("sda sadsa List value"+listValues+"hdsgfsjfsjsgdi");
+                        resolve(fields);
                     });
-                }
-            );
-
-        } catch (error) {
-
-        }
-        console.log("----------------------------------------------------");
-        console.log("List value"+listValues+"hdsgfsjfsjsgdi");
+                });
+            } else {
+                var myfield = new fieldModel({
+                    type: v.type,
+                    lable: v.lable,
+                    subtype: v.subtype,
+                    className: v.className,
+                    name: v.name,
+                    style: v.style,
+                    values: null
+                });
+                myfield.save((err, fields) => {
+                    if (err) throw err;
+                    resolve(fields);
+                });
+            }
+        });
+    };
+    var actions = Promise.all(components.map(fn1));
+    actions.then(data => {
         var myform = new formModel({
-            type: component.type,
-            lable: component.lable,
-            subtype: component.subtype,
-            className: component.className,
-            name: component.name,
-            style: component.style,
-            values: listValues
+            fields: data
         });
         myform.save((err, forms) => {
             if (err) throw err;
-        });
+            console.log(JSON.stringify(forms))
+            res.status(200).json({ result: JSON.stringify(forms) });
+        }
+        );
     });
-    
-    console.log("--------------ssssssssssssssss--------------------------------------");
-    console.log("List value"+listValues+"hdsgfsjfsjsgdi");
-    res.status(200).json(result="success");
-
-    // values.forEach(element => {
-    //     var formValue = new valueModel({
-    //         label: element.label,
-    //         value: element.value
-    //     });
-    //     formValue.save((err, values) => {
-    //         if (err) throw err;
-    //         listValues.push(values);
-    //     });
-    // });
-    // var myform = new formModel({
-    //     type: req.body.type,
-    //     lable: req.body.lable,
-    //     subtype: req.body.subtype,
-    //     className: req.body.className,
-    //     name: req.body.name,
-    //     style: req.body.style,
-    //     values: listValues
-    // });
-    // myform.save((err, forms) => {
-    //     if (err) throw err;
-    //     res.status(200).json(result = accounts);
-    //     console.log("da vao day");
-    // });
-
 })
+// app.post("/api/form/create", async (req, res) => {
+//     var data = req.body.data;
+//     var components = JSON.parse(data);
+//     var listValues = [];
+//     components.forEach(function (component) {
+//         try {
+//             var listValue = component.values;
+//             listValue.forEach(
+//                 function (value) {
+//                     var formValue = new valueModel({
+//                         label: value.label,
+//                         value: value.value
+//                     });
+//                     formValue.save((err, values) => {
+//                         if (err) throw err;
+//                         listValues.push(values);
+//                     });
+//                 }
+//             )
+
+//         } catch (error) {
+
+//         }
+//         console.log("----------------------------------------------------");
+//         console.log("List value" + listValues + "hdsgfsjfsjsgdi");
+//         var myform = new formModel({
+//             type: component.type,
+//             lable: component.lable,
+//             subtype: component.subtype,
+//             className: component.className,
+//             name: component.name,
+//             style: component.style,
+//             values: listValues
+//         });
+//         myform.save((err, forms) => {
+//             if (err) throw err;
+//         });
+//     });
+
+//     console.log("--------------ssssssssssssssss--------------------------------------");
+//     console.log("List value" + listValues + "hdsgfsjfsjsgdi");
+//     res.status(200).json(result = "success");
+
+//     // values.forEach(element => {
+//     //     var formValue = new valueModel({
+//     //         label: element.label,
+//     //         value: element.value
+//     //     });
+//     //     formValue.save((err, values) => {
+//     //         if (err) throw err;
+//     //         listValues.push(values);
+//     //     });
+//     // });
+//     // var myform = new formModel({
+//     //     type: req.body.type,
+//     //     lable: req.body.lable,
+//     //     subtype: req.body.subtype,
+//     //     className: req.body.className,
+//     //     name: req.body.name,
+//     //     style: req.body.style,
+//     //     values: listValues
+//     // });
+//     // myform.save((err, forms) => {
+//     //     if (err) throw err;
+//     //     res.status(200).json(result = accounts);
+//     //     console.log("da vao day");
+//     // });
+
+// })
 app.listen(8000, () => {
 
     console.log("Start with 8000")
