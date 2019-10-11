@@ -13,4 +13,3 @@ Cài đặt các module cần thiết
   -$ npm install body-parser --save
 Run project:
   -$ node index.js
-  
