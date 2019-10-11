@@ -103,10 +103,17 @@ app.post("/api/form/create", async (req, res) => {
         myform.save((err, forms) => {
             if (err) throw err;
             console.log(JSON.stringify(forms))
-            res.status(200).json({ result: JSON.stringify(forms) });
+            res.status(200).json( result=JSON.stringify(forms) );
         }
         );
     });
+})
+app.get("/api/form/user/:id",(req,res)=>{
+    var result=formModel.findById(req.params.id,(err,forms)=>{
+        if(err) throw err;
+        res.status(200).json(result=JSON.stringify(forms));
+    })
+
 })
 // app.post("/api/form/create", async (req, res) => {
 //     var data = req.body.data;
