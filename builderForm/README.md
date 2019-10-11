@@ -5,8 +5,7 @@ Khởi động command promt với quyền admin đi tới thư mục lưu proje
 -$ npm install -g @angular/cli <br/>
 Run project: <br/>
 -$ npm start <br/>
-<hr>
-## NodeJS API <br/>
+## NodeJS API:
 Cài đặt các module cần thiết <br/>
 -$ npm install express --save <br/>
 -$ npm install mongoose --save <br/>
