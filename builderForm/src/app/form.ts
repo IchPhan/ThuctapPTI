@@ -1,11 +1,7 @@
-import { Value } from './value';
+import { Field } from './field';
 
 export class Form {
-    type:String;
-    lable:String;
-    subtype:String;
-    className:String;
-    name:String;
-    style:String;
-    value:Array<Value>;
+    _id:String;
+    fields:Field[]=[];
+    __v:Number;
 }

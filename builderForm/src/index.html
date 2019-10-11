@@ -1,12 +1,17 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <title>BuilderForm</title>
+  <title>BuiderForm</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -20,25 +25,36 @@
       $(document.getElementById('fb-editor')).formBuilder();
     });
   </script>
-  <script>
-    jQuery(function ($) {
+  <!-- <script>
+    $(document).ready(function ($) {
       var fbEditor = document.getElementById('build-wrap');
       var formBuilder = $(fbEditor).formBuilder();
       $("#btnsave").click(function () {
-        alert("Save your form?");
-        $.ajax({
-          url: "http://localhost:8000/api/form/create",
-          method: "POST",
-          data: {
-            data: formBuilder.actions.getData('json'),
-            success: function (result) {
-              alert(result);
+        var check = confirm("Save your form?");
+        if (check) {
+          var data = formBuilder.actions.getData('json');
+          $.ajax({
+            scriptCharset: "utf-8", //or "ISO-8859-1"
+            contentType: "application/json; charset=utf-8",
+            url: "http://localhost:8000/api/form/create",
+            method: "POST",
+            data: {
+              data: formBuilder.actions.getData('json')
+            },
+            success: function (data) {
+              alert("That work great!!");
+              window.location.replace("/userForm/" + data.toString);
             }
-          }
-        })
+          });
+        }
+
       })
     });
-  </script>
+  </script> -->
 </body>
 
+</html>
+<body>
+  <app-root></app-root>
+</body>
 </html>

@@ -1,0 +1,7 @@
+<h3>How to do that</h3>
+<form>
+    <div *ngFor="let item of listField">
+        <app-dynamic-form-builder [field]="item"></app-dynamic-form-builder>
+    </div>
+    <input type="submit" value="Submit"/>
+</form>
